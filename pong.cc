@@ -6,84 +6,9 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&);               \
-  void operator=(const TypeName&)
-
-class Exception : public std::exception {
- public:
-  explicit Exception(std::string message) : message_(std::move(message)) {}
-
-  virtual ~Exception() noexcept(true) {}
-
-  virtual const char* what() const throw() override { return message_.c_str(); }
-
- private:
-  std::string message_;
-};
-
-namespace glfw {
-
-class Library {
- private:
-  DISALLOW_COPY_AND_ASSIGN(Library);
-
- public:
-  Library();
-  ~Library();
-};
-
-}  // namespace glfw
-
-namespace gl {
-
-class Buffers {
- private:
-  DISALLOW_COPY_AND_ASSIGN(Buffers);
-
- public:
-  Buffers(GLuint* buffers, GLsizei size);
-  ~Buffers();
-
-  const GLuint* buffers() { return buffers_; }
-  GLsizei size() { return size_; }
-
- private:
-  GLuint* buffers_;
-  GLsizei size_;
-};
-
-class VertexArrays {
- private:
-  DISALLOW_COPY_AND_ASSIGN(VertexArrays);
-
- public:
-  VertexArrays(GLuint* vertex_arrays, GLsizei size);
-  ~VertexArrays();
-
-  const GLuint* vertex_arrays() { return vertex_arrays_; }
-  GLsizei size() { return size_; }
-
- private:
-  GLuint* vertex_arrays_;
-  GLsizei size_;
-};
-
-class Shader {
- private:
-  DISALLOW_COPY_AND_ASSIGN(Shader);
-
- public:
-  explicit Shader(GLenum shader_type);
-  ~Shader();
-
-  GLuint shader() { return shader_; }
-
- private:
-  GLuint shader_;
-};
-
-}  // namespace gl
+#include "gl.h"
+#include "glfw.h"
+#include "utils.h"
 
 void LoadShaders(GLuint index, GLuint* program_out);
 
@@ -107,6 +32,11 @@ int main() {
   glfwSetWindowTitle("PONG");
   glfwEnable(GLFW_STICKY_KEYS);
 
+  GLuint vertex_array;
+  gl::VertexArrays arrays(&vertex_array, 1);
+
+  glBindVertexArray(vertex_array);
+
   GLuint vertex_buffer;
   gl::Buffers buffers(&vertex_buffer, 1);
 
@@ -118,11 +48,6 @@ int main() {
                sizeof(vertex_buffer_data),
                vertex_buffer_data,
                GL_STATIC_DRAW);
-
-  GLuint vertex_array;
-  gl::VertexArrays arrays(&vertex_array, 1);
-
-  glBindVertexArray(vertex_array);
 
   const GLuint index = 0;
   GLuint program;
@@ -223,48 +148,3 @@ void LoadShaders(GLuint index, GLuint* program_out) {
 
   *program_out = program;
 }
-
-namespace glfw {
-
-//// class Library
-
-Library::Library() {
-  if (!glfwInit())
-    throw Exception("Could not initialize GLFW");
-}
-
-Library::~Library() { glfwTerminate(); }
-
-}  // namespace glfw
-
-namespace gl {
-
-//// class Buffers
-
-Buffers::Buffers(GLuint* buffers, GLsizei size)
-    : buffers_(buffers), size_(size) {
-  glGenBuffers(size_, buffers_);
-}
-
-Buffers::~Buffers() { glDeleteBuffers(size_, buffers_); }
-
-//// class VertexArrays
-
-VertexArrays::VertexArrays(GLuint* vertex_arrays, GLsizei size)
-    : vertex_arrays_(vertex_arrays), size_(size) {
-  glGenVertexArrays(size_, vertex_arrays_);
-}
-
-VertexArrays::~VertexArrays() { glDeleteVertexArrays(size_, vertex_arrays_); }
-
-//// class Shader
-
-Shader::Shader(GLenum shader_type) {
-  shader_ = glCreateShader(shader_type);
-  if (!shader_)
-    throw Exception("Could not create shader");
-}
-
-Shader::~Shader() { glDeleteShader(shader_); }
-
-}  // namespace gl
