@@ -6,9 +6,9 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 
-#include "gl.h"
-#include "glfw.h"
-#include "utils.h"
+#include "base/base.h"
+#include "graphics/gl.h"
+#include "platform/graphics/linux/glfw.h"
 
 void LoadShaders(GLuint index, GLuint* program_out);
 

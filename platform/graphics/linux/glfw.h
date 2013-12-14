@@ -1,9 +1,9 @@
 // Copyright (C) 2013 Che-Liang Chiou.
 
-#ifndef GLFW_H_
-#define GLFW_H_
+#ifndef PLATFORM_GRAPHICS_LINUX_GLFW_H_
+#define PLATFORM_GRAPHICS_LINUX_GLFW_H_
 
-#include "utils.h"
+#include "base/base.h"
 
 namespace glfw {
 
@@ -18,4 +18,4 @@ class Library {
 
 }  // namespace glfw
 
-#endif  // GLFW_H_
+#endif  // PLATFORM_GRAPHICS_LINUX_GLFW_H_

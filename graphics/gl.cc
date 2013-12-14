@@ -1,6 +1,6 @@
 // Copyright (C) 2013 Che-Liang Chiou.
 
-#include "gl.h"
+#include "graphics/gl.h"
 
 using namespace gl;
 

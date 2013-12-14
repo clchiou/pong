@@ -1,6 +1,14 @@
-VariantDir('out', '#', duplicate=0)
+import os
 
-Program(target='pong',
-        source=Split('pong.cc gl.cc glfw.cc'),
-        CPPFLAGS='-O2 -Wall -Werror -std=c++11',
-        LIBS=Split('-lglfw -lGL -lGLEW'))
+
+env = Environment(CPPPATH='#', CPPFLAGS='-O2 -Wall -Werror -std=c++11')
+Export('env')
+
+sconscripts = ['base/SConscript',
+               'graphics/SConscript',
+               'platform/linux/SConscript',
+               'platform/graphics/linux/SConscript']
+
+for sconscript in sconscripts:
+    variant_dir = os.path.join('out', os.path.dirname(sconscript))
+    SConscript(sconscript, variant_dir=variant_dir, duplicate=0)

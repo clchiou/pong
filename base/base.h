@@ -1,7 +1,7 @@
 // Copyright (C) 2013 Che-Liang Chiou.
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef BASE_BASE_H_
+#define BASE_BASE_H_
 
 #include <exception>
 #include <string>
@@ -22,4 +22,4 @@ class Exception : public std::exception {
   std::string message_;
 };
 
-#endif  // UTILS_H_
+#endif  // BASE_BASE_H_

@@ -1,11 +1,12 @@
 // Copyright (C) 2013 Che-Liang Chiou.
 
-#ifndef GL_H_
-#define GL_H_
+#ifndef GRAPHICS_GL_H_
+#define GRAPHICS_GL_H_
 
+// TODO(clchiou): Why couldn't we use <GL/gl.h> here?
 #include <GL/glew.h>
 
-#include "utils.h"
+#include "base/base.h"
 
 namespace gl {
 
@@ -57,4 +58,4 @@ class Shader {
 
 }  // namespace gl
 
-#endif  // GL_H_
+#endif  // GRAPHICS_GL_H_
