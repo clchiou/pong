@@ -1,0 +1,27 @@
+import os
+import subprocess
+
+
+SVN_REPO = 'http://box2d.googlecode.com/svn/tags/v2.3.0'
+if not os.path.exists('v2.3.0'):
+    subprocess.check_call(['svn', 'checkout', SVN_REPO])
+
+
+def glob_recursively(root_path, extensions):
+    source = []
+    for root, _, files in os.walk(root_path):
+        for name in files:
+            ext = os.path.splitext(name)[1]
+            if ext in extensions:
+                source.append(os.path.join(root, name))
+    return source
+
+source_node = Dir('.').srcnode()
+source_root = source_node.Dir('v2.3.0/Box2D')
+
+source = glob_recursively(source_root.Dir('Box2D').abspath, {'.cc', '.cpp'})
+source = [os.path.relpath(src, source_node.abspath) for src in source]
+
+
+env = Environment(CPPPATH=source_root, CPPFLAGS='-O2 -Wall')
+env.StaticLibrary(target='box2d', source=source)
