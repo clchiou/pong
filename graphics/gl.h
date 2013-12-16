@@ -50,10 +50,29 @@ class Shader {
   explicit Shader(GLenum shader_type);
   ~Shader();
 
-  GLuint shader() { return shader_; }
+  GLuint shader() const { return shader_; }
+
+  void Compile(const GLchar* codes[], GLsizei count);
 
  private:
   GLuint shader_;
+};
+
+class Program {
+ private:
+  DISALLOW_COPY_AND_ASSIGN(Program);
+
+ public:
+  Program();
+  ~Program();
+
+  GLuint program() const { return program_; }
+
+  void Attach(const Shader& shader);
+  void Link();
+
+ private:
+  GLuint program_;
 };
 
 }  // namespace gl

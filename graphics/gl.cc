@@ -31,3 +31,52 @@ Shader::Shader(GLenum shader_type) {
 }
 
 Shader::~Shader() { glDeleteShader(shader_); }
+
+void Shader::Compile(const GLchar* codes[], GLsizei count) {
+  glShaderSource(shader_, count, codes, NULL);
+  glCompileShader(shader_);
+
+  GLint status = GL_FALSE;
+  glGetShaderiv(shader_, GL_COMPILE_STATUS, &status);
+  if (status)
+    return;
+
+  GLint length = 0;
+  glGetShaderiv(shader_, GL_INFO_LOG_LENGTH, &length);
+  if (!length) {
+    throw Exception("shader: unknown error");
+  } else {
+    char message[length];
+    glGetShaderInfoLog(shader_, length, NULL, message);
+    throw Exception(std::string("shader: error: ") + message);
+  }
+}
+
+//// class Program
+
+Program::Program() { program_ = glCreateProgram(); }
+
+Program::~Program() { glDeleteProgram(program_); }
+
+void Program::Attach(const Shader& shader) {
+  glAttachShader(program_, shader.shader());
+}
+
+void Program::Link() {
+  glLinkProgram(program_);
+
+  GLint status = GL_FALSE;
+  glGetProgramiv(program_, GL_LINK_STATUS, &status);
+  if (status)
+    return;
+
+  GLint length = 0;
+  glGetProgramiv(program_, GL_INFO_LOG_LENGTH, &length);
+  if (!length) {
+    throw Exception("program: unknown error");
+  } else {
+    char message[length];
+    glGetProgramInfoLog(program_, length, NULL, message);
+    throw Exception(std::string("program: error: ") + message);
+  }
+}
