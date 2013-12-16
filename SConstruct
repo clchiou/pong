@@ -4,8 +4,8 @@ import os
 build_root = Dir('#out')
 
 env = Environment(BUILD_ROOT=build_root,
-                  CPPPATH='#',
-                  CPPFLAGS='-O2 -Wall -Werror -std=c++11')
+                  CPPPATH=Split('#'),
+                  CPPFLAGS=Split('-O2 -Wall -Werror -std=c++11'))
 Export('env')
 
 sconscripts = ['base/SConscript',
