@@ -8,7 +8,7 @@
 
 #include "base/base.h"
 #include "graphics/gl.h"
-#include "platform/graphics/linux/glfw.h"
+#include "platform/linux/graphics/glfw.h"
 
 void LoadShaders(GLuint index, GLuint* program_out);
 

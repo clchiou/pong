@@ -1,8 +1,10 @@
 Import('env')
-env.Append(LIBS=Split('-lglfw -lGL -lGLEW'))
+env = env.Clone(LIBS=Split('-lglfw -lGL -lGLEW'))
 
-# TODO(clchiou): This is problematic; figure out how to do this in scons.
-archives = ['#/out/graphics/libgraphics.a',
-            '#/out/platform/graphics/linux/libplatform_graphics.a']
+# TODO(clchiou): Better, but this is still problematic.
+build_root = env['BUILD_ROOT']
+libs = [build_root.File('graphics/libgraphics.a'),
+        build_root.File('platform/linux/graphics/libplatform_graphics.a')]
+source = Glob('*.cc') + libs
 
-env.Program(target='pong', source=Glob('*.cc') + archives)
+env.Program(target='pong', source=source)

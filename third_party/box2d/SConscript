@@ -19,6 +19,7 @@ def glob_recursively(root_path, extensions):
 source_node = Dir('.').srcnode()
 source_root = source_node.Dir('v2.3.0/Box2D')
 
+# TODO(clchiou): Generate source list only once when we checkout the repo.
 source = glob_recursively(source_root.Dir('Box2D').abspath, {'.cc', '.cpp'})
 source = [os.path.relpath(src, source_node.abspath) for src in source]
 

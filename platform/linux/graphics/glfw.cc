@@ -1,6 +1,6 @@
 // Copyright (C) 2013 Che-Liang Chiou.
 
-#include "platform/graphics/linux/glfw.h"
+#include "platform/linux/graphics/glfw.h"
 
 #include <GL/glfw.h>
 
