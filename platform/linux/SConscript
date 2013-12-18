@@ -3,16 +3,19 @@ Import('env')
 # TODO(clchiou): Better, but this is still problematic.
 build_root = env['BUILD_ROOT']
 
-source = [File('pong.cc'),
-          build_root.File('graphics/libgraphics.a'),
-          build_root.File('platform/linux/graphics/libplatform_graphics.a')]
-env_pong = env.Clone()
-env_pong.Append(LIBS=Split('-lglfw -lGL -lGLEW'))
-env_pong.Program(target='pong', source=source)
-
 source = [File('box2d.cc'),
           build_root.File('third_party/box2d/libbox2d.a')]
 env_box2d = env.Clone()
 env_box2d.Append(CPPPATH='#third_party/box2d')
 env_box2d.Append(CPPFLAGS='-Wno-strict-aliasing')
 env_box2d.Program(target='box2d', source=source)
+
+source = [File('pong.cc'),
+          build_root.File('graphics/libgraphics.a'),
+          build_root.File('platform/linux/graphics/libplatform_graphics.a'),
+          build_root.File('third_party/box2d/libbox2d.a')]
+env_pong = env.Clone()
+env_pong.Append(LIBS=Split('-lglfw -lGL -lGLEW'))
+env_pong.Append(CPPPATH='#third_party/box2d')
+env_pong.Append(CPPFLAGS='-Wno-strict-aliasing')
+env_pong.Program(target='pong', source=source)
