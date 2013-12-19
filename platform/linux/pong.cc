@@ -261,14 +261,16 @@ World::World(const Rectangle& body, const Rectangle& ground)
   b2BodyDef body_definition;
   body_definition.type = b2_dynamicBody;
   body_definition.position.Set(body.x(), body.y());
+  body_definition.angularVelocity = 1.0f;
   body_ = world_.CreateBody(&body_definition);
 
-  b2PolygonShape body_box;
-  body_box.SetAsBox(body.w(), body.h());
+  b2CircleShape body_circle;
+  body_circle.m_radius = 1.0f;
   b2FixtureDef fixture_definition;
-  fixture_definition.shape = &body_box;
+  fixture_definition.shape = &body_circle;
   fixture_definition.density = 1.0f;
   fixture_definition.friction = 0.3f;
+  fixture_definition.restitution = 1.0f;
   body_->CreateFixture(&fixture_definition);
 }
 
