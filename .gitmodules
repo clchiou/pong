@@ -1,0 +1,3 @@
+[submodule "site_scons/scons_package"]
+	path = site_scons/scons_package
+	url = git@github.com:clchiou/scons_package.git
