@@ -1,2 +1,12 @@
-Import('env')
-env.StaticLibrary(target='platform_graphics', source=Glob('*.cc'))
+from scons_package import *
+
+
+def export_env(env):
+    env.Append(LIBS=Split('-lglfw -lGLEW'))
+
+
+cc_library(
+    name = 'graphics',
+    srcs = Glob('*.cc'),
+    export_env = export_env,
+)

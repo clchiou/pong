@@ -1,12 +1,11 @@
-import os
+from scons_package import *
 
 
-build_root = Dir('#out')
+register_root_env(Environment(
+    CPPPATH = Split('#'),
+    CPPFLAGS = Split('-O2 -Wall -Werror -std=c++11'),
+))
 
-env = Environment(BUILD_ROOT=build_root,
-                  CPPPATH=Split('#'),
-                  CPPFLAGS=Split('-O2 -Wall -Werror -std=c++11'))
-Export('env')
 
 sconscripts = ['base/SConscript',
                'graphics/SConscript',
@@ -15,5 +14,7 @@ sconscripts = ['base/SConscript',
                'third_party/box2d/SConscript']
 
 for sconscript in sconscripts:
-    variant_dir = os.path.join(build_root.path, os.path.dirname(sconscript))
-    SConscript(sconscript, variant_dir=variant_dir, duplicate=0)
+    SConscript(sconscript)
+
+
+SConscript('SConscript', variant_dir='#out', duplicate=0)
