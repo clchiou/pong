@@ -1,0 +1,93 @@
+from scons_package import *
+from interrogator.android import interrogate
+
+
+### Setup Android NDK
+
+import md5
+import os
+import subprocess
+
+# Fetch and unarchive Android NDK
+
+# TODO(clchiou): Detect host arch and fetch corresponding NDK.
+ANDROID_NDK = 'android-ndk-r9c'
+ANDROID_NDK_URL = \
+    'http://dl.google.com/android/ndk/android-ndk-r9c-linux-x86_64.tar.bz2'
+ANDROID_NDK_MD5 = 'e9c3fd9881c811753bb57f701b3e05b1'
+ANDROID_NDK_ARCHIVE = os.path.basename(ANDROID_NDK_URL)
+
+# TODO(clchiou): This breaks when SConscriptChdir(0) is called; fix it!
+if not os.path.exists(ANDROID_NDK_ARCHIVE):
+    subprocess.check_call(['wget', ANDROID_NDK_URL])
+
+if not os.path.exists(ANDROID_NDK):
+    md5_checksum = md5.new()
+    with open(ANDROID_NDK_ARCHIVE, 'rb') as archive:
+        while True:
+            buffer = archive.read(4096)
+            if not buffer:
+                break
+            md5_checksum.update(buffer)
+    checksum = md5_checksum.hexdigest()
+    if ANDROID_NDK_MD5 != checksum:
+        print 'checksum does not match: %s, %s' % (ANDROID_NDK_MD5, checksum)
+        Exit(2)
+    subprocess.check_call(('tar xjvf %s' % ANDROID_NDK_ARCHIVE).split())
+
+# Question Android NDK about build info
+
+import yaml
+
+BUILD_INFO = 'build_info.yaml'
+APPLICATION_VARS = {
+        'APP_OPTIM': 'release',
+        'APP_ABI': 'armeabi-v7a',
+        'APP_PLATFORM': 'android-18',
+        'APP_STL': 'stlport_static',
+}
+ANDROID_VARS = {
+        'LOCAL_ARM_MODE': 'arm',
+}
+
+if not os.path.exists(BUILD_INFO):
+    build_info = {}
+    with interrogate(ANDROID_NDK) as interrogator:
+        interrogator.set_application_vars(APPLICATION_VARS)
+        interrogator.set_android_vars(
+                build_type=interrogator.STATIC_LIBRARY,
+                android_vars=ANDROID_VARS)
+        for name, value in interrogator.question():
+            build_info[name] = value
+    with open(BUILD_INFO, 'w') as build_info_yaml:
+        build_info_yaml.write(yaml.dump(build_info))
+
+
+### Setup Android NDK build environment
+
+def assert_not_null(var):
+    assert var
+    return var
+
+with open(BUILD_INFO, 'r') as build_info_yaml:
+    build_info = yaml.load(build_info_yaml)
+
+package_environment(Environment(
+    # Common to C and C++
+    CCFLAGS = Split(assert_not_null(build_info['TARGET_CCFLAGS'])),
+    # Specific to C
+    CC = assert_not_null(build_info['TARGET_CC']),
+    CFLAGS = Split(assert_not_null(build_info['TARGET_CFLAGS'])),
+    # Specific to C++
+    CXX = assert_not_null(build_info['TARGET_CXX']),
+    CXXFLAGS = Split(assert_not_null(build_info['TARGET_CXXFLAGS'])),
+    # Other tools
+    LD = assert_not_null(build_info['TARGET_LD']),
+    LDFLAGS = Split(assert_not_null(build_info['TARGET_LDFLAGS'])),
+    AR = assert_not_null(build_info['TARGET_AR']),
+    ARFLAGS = Split(assert_not_null(build_info['TARGET_ARFLAGS'])),
+    STRIP = assert_not_null(build_info['TARGET_STRIP']),
+    OBJCOPY = assert_not_null(build_info['TARGET_OBJCOPY']),
+    # Include path
+    CPPPATH = Split(assert_not_null(build_info['C_INCLUDES'])),
+))

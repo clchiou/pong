@@ -5,7 +5,7 @@ def export_env(env):
     env.Append(LIBS='-lGL')
 
 
-cc_library(
+library(
     name = 'graphics',
     srcs = Glob('*.cc'),
     export_env = export_env,

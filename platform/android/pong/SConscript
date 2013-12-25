@@ -1,0 +1,8 @@
+from scons_package import *
+
+
+library(
+    name = 'pong',
+    srcs = 'pong.cc',
+    variant = 'android',
+)

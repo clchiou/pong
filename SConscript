@@ -1,4 +1,5 @@
 from scons_package import *
 
 
-make_builders()
+Import('variant')
+make_variant_builders(variant)

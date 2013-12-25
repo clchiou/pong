@@ -1,14 +1,14 @@
 from scons_package import *
 
 
-cc_program(
+program(
     name = 'box2d',
     srcs = 'box2d.cc',
     deps = '#third_party/box2d',
 )
 
 
-cc_program(
+program(
     name = 'pong',
     srcs = 'pong.cc',
     deps = ['#graphics',

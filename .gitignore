@@ -1,3 +1,6 @@
 .sconsign.dblite
 out
+platform/android/android-ndk-r9c
+platform/android/android-ndk-r9c-linux-x86_64.tar.bz2
+platform/android/build_info.yaml
 third_party/box2d/v2.3.0

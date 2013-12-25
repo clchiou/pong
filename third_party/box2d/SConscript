@@ -1,7 +1,7 @@
 from scons_package import *
 
 
-register_env(Environment(
+package_environment(Environment(
     CPPPATH = Dir('.').srcnode().Dir('v2.3.0/Box2D'),
     CPPFLAGS = Split('-O2'),
 ))
@@ -11,7 +11,7 @@ def export_env(env):
     env.Append(CPPPATH='#third_party/box2d', CPPFLAGS='-Wno-strict-aliasing')
 
 
-cc_library(
+library(
     name = 'box2d',
     srcs = glob(r'^v2.3.0/Box2D/Box2D/.*\.(cc|cpp)$', recursive=True),
     export_env = export_env,
