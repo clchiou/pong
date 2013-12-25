@@ -1,6 +1,6 @@
 [submodule "site_scons/scons_package"]
 	path = site_scons/scons_package
-	url = git@github.com:clchiou/scons_package.git
+	url = https://github.com/clchiou/scons_package.git
 [submodule "site_scons/interrogator"]
 	path = site_scons/interrogator
-	url = git@github.com:clchiou/interrogator.git
+	url = https://github.com/clchiou/interrogator.git
